@@ -9,12 +9,13 @@ import { formatRupiah } from "@/lib/utils/format";
 export const dynamic = "force-dynamic";
 
 interface ProductPageProps {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
 // Meta tags dinamis per halaman produk — WAJIB sesuai spesifikasi SEO.
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
-  const product = await getProductBySlug(params.slug);
+  const { slug } = await params;
+  const product = await getProductBySlug(slug);
 
   if (!product) {
     return { title: "Produk Tidak Ditemukan" };
@@ -36,7 +37,8 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
 }
 
 export default async function ProductDetailPage({ params }: ProductPageProps) {
-  const product = await getProductBySlug(params.slug);
+  const { slug } = await params;
+  const product = await getProductBySlug(slug);
 
   if (!product) {
     notFound();
