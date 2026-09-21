@@ -14,7 +14,7 @@ import CountdownSection from "./CountdownSection";
 import { formatRupiah } from "@/lib/utils/format";
 
 interface OrderDetailPageProps {
-  params: { orderId: string };
+  params: Promise<{ orderId: string }>;
 }
 
 export const metadata: Metadata = {
@@ -22,12 +22,13 @@ export const metadata: Metadata = {
 };
 
 export default async function OrderDetailPage({ params }: OrderDetailPageProps) {
+  const { orderId } = await params;
   const session = await getServerSession(authOptions);
   // Sama seperti member/pesanan/page.tsx — dicek ulang di sini (bukan
   // non-null assertion) agar TypeScript-safe.
-  if (!session?.user?.id) redirect(`/login?callbackUrl=/member/pesanan/${params.orderId}`);
+  if (!session?.user?.id) redirect(`/login?callbackUrl=/member/pesanan/${orderId}`);
 
-  const order = await getOrderForUser(params.orderId, session.user.id);
+  const order = await getOrderForUser(orderId, session.user.id);
 
   // Sengaja notFound() untuk "order tidak ada" MAUPUN "order milik user lain"
   // — lihat komentar di getOrderForUser() kenapa keduanya harus diperlakukan sama.

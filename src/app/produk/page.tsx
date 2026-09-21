@@ -8,19 +8,20 @@ import ProductGridList from "@/components/product/ProductGridList";
 export const dynamic = "force-dynamic";
 
 interface ProdukPageProps {
-  searchParams: {
+  searchParams: Promise<{
     kategori?: string;
     filter?: string;
     urut?: string;
     tampilan?: string;
-  };
+  }>;
 }
 
 const VALID_FILTERS: ProductFilter[] = ["relevan", "populer", "baru", "terlaris"];
 const VALID_PRICE_SORTS: PriceSort[] = ["asc", "desc"];
 
 export async function generateMetadata({ searchParams }: ProdukPageProps): Promise<Metadata> {
-  const category = CATEGORY_OPTIONS.find((c) => c.slug === searchParams.kategori);
+  const { kategori } = await searchParams;
+  const category = CATEGORY_OPTIONS.find((c) => c.slug === kategori);
 
   return {
     title: category ? `Produk ${category.label}` : "Semua Produk",
@@ -31,16 +32,17 @@ export async function generateMetadata({ searchParams }: ProdukPageProps): Promi
 }
 
 export default async function ProdukPage({ searchParams }: ProdukPageProps) {
-  const activeCategory = searchParams.kategori;
-  const activeFilter: ProductFilter = VALID_FILTERS.includes(searchParams.filter as ProductFilter)
-    ? (searchParams.filter as ProductFilter)
+  const { kategori, filter, urut, tampilan } = await searchParams;
+  const activeCategory = kategori;
+  const activeFilter: ProductFilter = VALID_FILTERS.includes(filter as ProductFilter)
+    ? (filter as ProductFilter)
     : "relevan";
   const activePriceSort: PriceSort | undefined = VALID_PRICE_SORTS.includes(
-    searchParams.urut as PriceSort
+    urut as PriceSort
   )
-    ? (searchParams.urut as PriceSort)
+    ? (urut as PriceSort)
     : undefined;
-  const activeView: "grid" | "list" = searchParams.tampilan === "list" ? "list" : "grid";
+  const activeView: "grid" | "list" = tampilan === "list" ? "list" : "grid";
 
   const products = await getProducts({
     categorySlug: activeCategory,
