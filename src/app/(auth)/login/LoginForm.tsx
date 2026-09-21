@@ -12,7 +12,7 @@ export default function LoginForm() {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") ?? "/member";
 
-  const [email, setEmail] = useState("");
+  const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -23,7 +23,7 @@ export default function LoginForm() {
     setError(null);
 
     const result = await signIn("credentials", {
-      email,
+      identifier,
       password,
       redirect: false,
     });
@@ -31,7 +31,7 @@ export default function LoginForm() {
     setIsSubmitting(false);
 
     if (result?.error) {
-      setError("Email atau password salah. Silakan coba lagi.");
+      setError("Username/email atau password salah. Silakan coba lagi.");
       return;
     }
 
@@ -57,19 +57,20 @@ export default function LoginForm() {
 
       <div className="mb-5 flex items-center gap-3 text-xs text-gray-400">
         <div className="h-px flex-1 bg-gray-200 dark:bg-gray-700" />
-        atau login dengan email
+        atau login dengan username/email
         <div className="h-px flex-1 bg-gray-200 dark:bg-gray-700" />
       </div>
 
       <form onSubmit={handleCredentialsLogin} className="space-y-4">
         <div>
-          <label className="mb-1 block text-sm font-medium">Email</label>
+          <label className="mb-1 block text-sm font-medium">Username atau Email</label>
           <input
-            type="email"
+            type="text"
             required
+            autoComplete="username"
             className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={identifier}
+            onChange={(e) => setIdentifier(e.target.value)}
           />
         </div>
 

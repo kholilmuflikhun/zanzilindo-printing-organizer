@@ -11,6 +11,7 @@ export default function RegisterForm() {
   const router = useRouter();
 
   const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -24,7 +25,7 @@ export default function RegisterForm() {
     const res = await fetch("/api/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, password }),
+      body: JSON.stringify({ name, username, email, password }),
     });
 
     if (!res.ok) {
@@ -35,7 +36,14 @@ export default function RegisterForm() {
     }
 
     // Auto-login setelah register berhasil, supaya user tidak perlu login manual lagi.
-    const result = await signIn("credentials", { email, password, redirect: false });
+    // Gunakan identifier yang sudah dinormalisasi agar sama dengan aturan authorize() di NextAuth.
+    const loginIdentifier = username.trim() || email.trim();
+    const result = await signIn("credentials", {
+      identifier: loginIdentifier.toLowerCase(),
+      password,
+      redirect: false,
+      callbackUrl: "/member",
+    });
     setIsSubmitting(false);
 
     if (result?.error) {
@@ -80,6 +88,22 @@ export default function RegisterForm() {
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
+        </div>
+
+        <div>
+          <label className="mb-1 block text-sm font-medium">Username</label>
+          <input
+            type="text"
+            required
+            minLength={3}
+            maxLength={30}
+            pattern="[A-Za-z0-9_]+"
+            autoComplete="username"
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+          <p className="mt-1 text-xs text-gray-400">3-30 karakter, hanya huruf, angka, dan garis bawah.</p>
         </div>
 
         <div>
