@@ -62,7 +62,7 @@ zanzilindo/
 │   │   │   ├── page.tsx              # listing produk (grid/list, filter Relevan/Populer/Baru/Terlaris, sorting harga)
 │   │   │   └── [slug]/
 │   │   │       └── page.tsx          # detail produk + meta tags dinamis (generateMetadata)
-│   │   │                              # (kalkulator dirender via components/product/CategoryCalculator.tsx)
+│   │   │                             # (kalkulator dirender via components/product/CategoryCalculator.tsx)
 │   │   │
 │   │   ├── simulator/                # selesai (batch 5)
 │   │   │   ├── page.tsx              # server component, export metadata, render <SimulatorTabs/>
@@ -79,82 +79,82 @@ zanzilindo/
 │   │   │
 │   │   ├── (auth)/                   # selesai (batch 6) — route group, tidak memengaruhi URL (/login, /register)
 │   │   │   ├── login/
-│   │   │   │   ├── page.tsx          # server component + metadata, bungkus <Suspense><LoginForm/></Suspense>
-│   │   │   │   └── LoginForm.tsx     # client — Credentials login + tombol "Login with Google"
+│   │   │   │   ├── page.tsx                  # server component + metadata, bungkus <Suspense><LoginForm/></Suspense>
+│   │   │   │   └── LoginForm.tsx             # client — Credentials login + tombol "Login with Google"
 │   │   │   └── register/
 │   │   │       ├── page.tsx
-│   │   │       └── RegisterForm.tsx  # client — daftar via /api/register, lalu auto-login
+│   │   │       └── RegisterForm.tsx          # client — daftar via /api/register, lalu auto-login
 │   │   │
-│   │   ├── member/                   # selesai (batch 9)
-│   │   │   ├── layout.tsx            # guard SERVER-SIDE: getServerSession + redirect jika belum login
-│   │   │   ├── page.tsx              # dashboard member
+│   │   ├── member/                           # selesai (batch 9)
+│   │   │   ├── layout.tsx                    # guard SERVER-SIDE: getServerSession + redirect jika belum login
+│   │   │   ├── page.tsx                      # dashboard member
 │   │   │   ├── cart/page.tsx
 │   │   │   ├── checkout/
 │   │   │   │   ├── page.tsx
 │   │   │   │   └── CheckoutClient.tsx        # client — panggil /api/checkout, buka Midtrans Snap popup
 │   │   │   └── pesanan/
-│   │   │       ├── page.tsx          # daftar pesanan
+│   │   │       ├── page.tsx                  # daftar pesanan
 │   │   │       └── [orderId]/
 │   │   │           ├── page.tsx              # tracking pesanan (server) + form ulasan (jika status diterima)
 │   │   │           └── CountdownSection.tsx  # client — Countdown + tombol "Lanjutkan Pembayaran"
 │   │   │
 │   │   └── api/
 │   │       ├── auth/[...nextauth]/route.ts
-│   │       ├── register/route.ts              # buat user baru, hash password bcrypt
-│   │       ├── contact/route.ts               # selesai (batch 7) — kirim notifikasi WA saat ada pesan Kontak
-│   │       ├── reviews/route.ts               # selesai (batch 7) — POST (validasi status DITERIMA) + GET per produk
-│   │       ├── checkout/route.ts              # buat order + trigger Midtrans Snap token + simpan snapRedirectUrl
+│   │       ├── register/route.ts             # buat user baru, hash password bcrypt
+│   │       ├── contact/route.ts              # selesai (batch 7) — kirim notifikasi WA saat ada pesan Kontak
+│   │       ├── reviews/route.ts              # selesai (batch 7) — POST (validasi status DITERIMA) + GET per produk
+│   │       ├── checkout/route.ts             # buat order + trigger Midtrans Snap token + simpan snapRedirectUrl
 │   │       ├── midtrans/
-│   │       │   ├── notification/route.ts      # webhook Midtrans (server-to-server)
-│   │       │   └── cancel-expired/route.ts    # selesai (batch 9) — cron: batalkan order lewat 1x24 jam
-│   │       └── whatsapp/notify/route.ts       # kirim notifikasi WA ke admin
+│   │       │   ├── notification/route.ts     # webhook Midtrans (server-to-server)
+│   │       │   └── cancel-expired/route.ts   # selesai (batch 9) — cron: batalkan order lewat 1x24 jam
+│   │       └── whatsapp/notify/route.ts      # kirim notifikasi WA ke admin
 │   │
 │   ├── components/
 │   │   ├── layout/
-│   │   │   ├── Navbar.tsx            # selesai (batch 9) — + badge jumlah item cart
+│   │   │   ├── Navbar.tsx                    # selesai (batch 9) — + badge jumlah item cart
 │   │   │   ├── Footer.tsx
 │   │   │   └── ThemeToggle.tsx
-│   │   ├── home/                     # selesai (batch 6)
-│   │   │   ├── BannerSlider.tsx      # swipe mode (touch), autoplay, panah + dot navigation
-│   │   │   └── ProductCarousel.tsx   # scroll horizontal + tombol navigasi
+│   │   ├── home/                             # selesai (batch 6)
+│   │   │   ├── BannerSlider.tsx              # swipe mode (touch), autoplay, panah + dot navigation
+│   │   │   └── ProductCarousel.tsx           # scroll horizontal + tombol navigasi
 │   │   ├── product/
-│   │   │   ├── ProductGridList.tsx            # selesai (batch 8) — presentasi murni, mode grid/list
-│   │   │   ├── ProductFilterSort.tsx          # selesai (batch 8) — kontrol via query string (bookmark-able)
-│   │   │   ├── CategoryCalculator.tsx         # resolver: pilih kalkulator sesuai product.category
-│   │   │   ├── AddToCartPanel.tsx             # selesai (batch 9) — bungkus CategoryCalculator + tombol Tambah ke Keranjang
+│   │   │   ├── ProductGridList.tsx           # selesai (batch 8) — presentasi murni, mode grid/list
+│   │   │   ├── ProductFilterSort.tsx         # selesai (batch 8) — kontrol via query string (bookmark-able)
+│   │   │   ├── CategoryCalculator.tsx        # resolver: pilih kalkulator sesuai product.category
+│   │   │   ├── AddToCartPanel.tsx            # selesai (batch 9) — bungkus CategoryCalculator + tombol Tambah ke Keranjang
 │   │   │   └── calculators/
-│   │   │       ├── BannerCalculator.tsx        # selesai (batch 1)
-│   │   │       ├── BrosurCalculator.tsx        # selesai (batch 4)
-│   │   │       ├── BukuNotaCalculator.tsx      # selesai (batch 4)
-│   │   │       ├── BukuCustomCalculator.tsx    # selesai (batch 4) — tebalSpin masih input manual
-│   │   │       ├── CetakA3PlusCalculator.tsx   # selesai (batch 4)
-│   │   │       ├── KartuNamaCalculator.tsx     # selesai (batch 4)
-│   │   │       ├── DokumenCalculator.tsx       # selesai (batch 4)
-│   │   │       ├── StikerCalculator.tsx        # selesai (batch 4)
-│   │   │       ├── KalenderCalculator.tsx      # selesai (batch 4)
-│   │   │       └── MerchandiseCalculator.tsx   # selesai (batch 4) — harga estimasi awal
+│   │   │       ├── BannerCalculator.tsx       # selesai (batch 1)
+│   │   │       ├── BrosurCalculator.tsx       # selesai (batch 4)
+│   │   │       ├── BukuNotaCalculator.tsx     # selesai (batch 4)
+│   │   │       ├── BukuCustomCalculator.tsx   # selesai (batch 4) — tebalSpin masih input manual
+│   │   │       ├── CetakA3PlusCalculator.tsx  # selesai (batch 4)
+│   │   │       ├── KartuNamaCalculator.tsx    # selesai (batch 4)
+│   │   │       ├── DokumenCalculator.tsx      # selesai (batch 4)
+│   │   │       ├── StikerCalculator.tsx       # selesai (batch 4)
+│   │   │       ├── KalenderCalculator.tsx     # selesai (batch 4)
+│   │   │       └── MerchandiseCalculator.tsx  # selesai (batch 4) — harga estimasi awal
 │   │   ├── cart/
-│   │   │   └── CartTable.tsx         # selesai (batch 9) — checklist, ubah qty, hapus, subtotal
-│   │   ├── order/                    # selesai (batch 9)
+│   │   │   └── CartTable.tsx                  # selesai (batch 9) — checklist, ubah qty, hapus, subtotal
+│   │   ├── order/                             # selesai (batch 9)
 │   │   │   ├── OrderTrackingStepper.tsx
 │   │   │   └── OrderStatusBadge.tsx
 │   │   ├── review/
-│   │   │   ├── ReviewList.tsx        # selesai (batch 7) — server component, tampilkan ulasan di halaman produk
-│   │   │   └── ReviewForm.tsx        # selesai (batch 9) — bintang + komentar, POST /api/reviews
+│   │   │   ├── ReviewList.tsx                 # selesai (batch 7) — server component, tampilkan ulasan di halaman produk
+│   │   │   └── ReviewForm.tsx                 # selesai (batch 9) — bintang + komentar, POST /api/reviews
 │   │   └── ui/
-│   │       └── Countdown.tsx         # selesai (batch 9) — dipakai Checkout & Tracking
-│   │       # (Button, Card, Tabs, Modal, dll — primitives lain menyusul sesuai kebutuhan)
+│   │       └── Countdown.tsx                  # selesai (batch 9) — dipakai Checkout & Tracking
+│   │                                          # (Button, Card, Tabs, Modal, dll — primitives lain menyusul sesuai kebutuhan)
 │   │
 │   ├── lib/
-│   │   ├── auth.ts                   # konfigurasi NextAuth (Google + Credentials + PrismaAdapter)
-│   │   ├── prisma.ts                 # instance PrismaClient singleton
-│   │   ├── products.ts               # query Prisma katalog produk + CATEGORY_OPTIONS (satu sumber) + getProducts (filter/sort)
-│   │   ├── orders.ts                 # selesai (batch 9) — query pesanan dengan cek kepemilikan, label & urutan status
-│   │   ├── midtrans.ts               # helper Snap API (createTransaction, verifySignature)
-│   │   ├── whatsapp.ts               # helper kirim pesan WA
+│   │   ├── auth.ts                            # konfigurasi NextAuth (Google + Credentials + PrismaAdapter)
+│   │   ├── prisma.ts                          # instance PrismaClient singleton
+│   │   ├── products.ts                        # query Prisma katalog produk + CATEGORY_OPTIONS (satu sumber) + getProducts (filter/sort)
+│   │   ├── orders.ts                          # selesai (batch 9) — query pesanan dengan cek kepemilikan, label & urutan status
+│   │   ├── midtrans.ts                        # helper Snap API (createTransaction, verifySignature)
+│   │   ├── whatsapp.ts                        # helper kirim pesan WA
 │   │   ├── pricing/
-│   │   │   ├── types.ts              # tipe & interface variabel harga tiap kategori
-│   │   │   ├── bannerPricing.ts      # rumus hitung Banner (Panjang x Lebar x Harga Pokok/meter)
+│   │   │   ├── types.ts                       # tipe & interface variabel harga tiap kategori
+│   │   │   ├── bannerPricing.ts               # rumus hitung Banner (Panjang x Lebar x Harga Pokok/meter)
 │   │   │   ├── brosurPricing.ts
 │   │   │   ├── bukuNotaPricing.ts
 │   │   │   ├── bukuCustomPricing.ts
@@ -164,26 +164,26 @@ zanzilindo/
 │   │   │   ├── stikerPricing.ts
 │   │   │   ├── kalenderPricing.ts
 │   │   │   ├── merchandisePricing.ts
-│   │   │   └── spinBuku.ts           # rumus tebal spin — dipakai Simulator & BukuCustomCalculator
+│   │   │   └── spinBuku.ts                    # rumus tebal spin — dipakai Simulator & BukuCustomCalculator
 │   │   ├── utils/
-│   │   │   └── format.ts             # formatRupiah — dipakai semua kalkulator & halaman produk
+│   │   │   └── format.ts                      # formatRupiah — dipakai semua kalkulator & halaman produk
 │   │   └── seo/
-│   │       └── organizationSchema.ts # JSON-LD Organization Schema
+│   │       └── organizationSchema.ts          # JSON-LD Organization Schema
 │   │
 │   ├── hooks/
-│   │   └── useCountdown.ts           # selesai (batch 9) — hitung mundur generik + onExpire
+│   │   └── useCountdown.ts                    # selesai (batch 9) — hitung mundur generik + onExpire
 │   │
 │   ├── context/
 │   │   ├── ThemeContext.tsx
-│   │   ├── AuthProvider.tsx          # selesai (batch 6) — wrapper SessionProvider NextAuth (WAJIB di root layout)
-│   │   └── CartContext.tsx           # selesai (batch 9) — cart localStorage + checklist (useCart di file yang sama)
+│   │   ├── AuthProvider.tsx                   # selesai (batch 6) — wrapper SessionProvider NextAuth (WAJIB di root layout)
+│   │   └── CartContext.tsx                    # selesai (batch 9) — cart localStorage + checklist (useCart di file yang sama)
 │   │
 │   └── types/
 │       ├── index.ts
-│       └── next-auth.d.ts            # selesai (batch 9) — augmentation Session.user.id (WAJIB, tanpa ini build gagal)
+│       └── next-auth.d.ts                     # selesai (batch 9) — augmentation Session.user.id (WAJIB, tanpa ini build gagal)
 │
 └── scripts/
-    └── generate-project.sh           # script Node/Bash generator struktur folder
+    └── generate-project.sh                    # script Node/Bash generator struktur folder
 ```
 
 **Kenapa struktur ini?**
