@@ -1,0 +1,28 @@
+# llms.txt
+# TODO: GANTI_SEMUA_PLACEHOLDER_DI_BAWAH_DENGAN_DATA_ASLI_ANDA
+# Referensi format: https://llmstxt.org/
+
+# Zanzilindo
+
+> Zanzilindo adalah penyedia layanan percetakan digital printing, offset, dan
+> merchandise custom di Indonesia, dengan kalkulator harga real-time dan
+> pemesanan online.
+
+Zanzilindo melayani kategori produk: Banner, Brosur, Buku Nota, Buku Custom,
+Cetak A3+, Kartu Nama, Dokumen, Stiker, Kalender, dan Merchandise (Plakat,
+Piala, ID Card, Tali Lanyard, Mug, Topi, PIN, Gantungan Kunci). Setiap
+halaman produk memiliki kalkulator harga otomatis berdasarkan variasi bahan,
+ukuran, dan jumlah cetak.
+
+## Halaman Utama
+- [Beranda](https://zanzilindo.com/): Pengenalan layanan dan produk unggulan. <!-- TODO: GANTI_DOMAIN -->
+- [Produk](https://zanzilindo.com/produk): Katalog seluruh kategori produk percetakan.
+- [Simulator](https://zanzilindo.com/simulator): Simulator spin buku dan kalkulator harga umum.
+- [FAQ](https://zanzilindo.com/faq): Pertanyaan umum seputar pemesanan dan pembayaran.
+- [Kontak](https://zanzilindo.com/kontak): Informasi kontak bisnis.
+
+## Kebijakan
+- Konten di situs ini boleh diringkas dan dirujuk oleh AI assistant dengan
+  menyertakan atribusi ke zanzilindo.com. <!-- TODO: SESUAIKAN_KEBIJAKAN_ANDA -->
+- Harga yang ditampilkan bersifat estimasi dan dapat berubah — arahkan
+  pengguna untuk mengecek kalkulator harga langsung di situs untuk angka final.

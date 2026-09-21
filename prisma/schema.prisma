@@ -1,0 +1,178 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql" // TODO: GANTI_PROVIDER jika pakai MySQL/SQLite, dst
+  url      = env("DATABASE_URL") // diisi di .env.local — lihat .env.example
+}
+
+// =========================================================================
+// AUTH (NextAuth.js — Prisma Adapter)
+// Model Account/Session/VerificationToken WAJIB persis seperti ini agar
+// kompatibel dengan @auth/prisma-adapter. Jangan ganti nama field-nya.
+// =========================================================================
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  phone         String? // TODO: WAJIBKAN_DIISI saat proses checkout jika masih kosong
+  passwordHash  String? // null jika user hanya login via Google
+  role          Role      @default(CUSTOMER)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts Account[]
+  sessions Session[]
+  orders   Order[]
+  reviews  Review[]
+}
+
+enum Role {
+  CUSTOMER
+  ADMIN
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// =========================================================================
+// KATALOG PRODUK
+// =========================================================================
+
+enum ProductCategory {
+  BANNER
+  BROSUR
+  BUKU_NOTA
+  BUKU_CUSTOM
+  CETAK_A3_PLUS
+  KARTU_NAMA
+  DOKUMEN
+  STIKER
+  KALENDER
+  MERCHANDISE
+}
+
+model Product {
+  id               String          @id @default(cuid())
+  slug             String          @unique
+  name             String
+  category         ProductCategory
+  shortDescription String
+  imageUrl         String
+  startingPrice    Int // dalam Rupiah, tanpa desimal
+  isActive         Boolean         @default(true)
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  orderItems OrderItem[]
+  reviews    Review[]
+
+  @@index([category])
+}
+
+// =========================================================================
+// PESANAN & PEMBAYARAN
+// =========================================================================
+
+enum OrderStatus {
+  MENUNGGU_PEMBAYARAN // dibuat, menunggu bayar Midtrans (batas 1x24 jam)
+  TERVERIFIKASI // pembayaran sukses (settlement/capture dari Midtrans)
+  DIKEMAS // proses pengemasan
+  PICKUP // barang diambil kurir
+  DALAM_PENGIRIMAN // tracking pengiriman
+  DITERIMA // sampai tujuan — baru boleh diulas setelah status ini
+  DIBATALKAN // expired / cancel / deny dari Midtrans
+}
+
+model Order {
+  id              String      @id // TODO: FORMAT_ID sesuai generator di app/api/checkout/route.ts (contoh: "ZNZ-<timestamp>")
+  userId          String
+  status          OrderStatus @default(MENUNGGU_PEMBAYARAN)
+  grossAmount     Int
+  expiredAt       DateTime // = createdAt + 1x24 jam, dipakai job pembatalan otomatis
+  snapRedirectUrl String? // URL halaman pembayaran Midtrans Snap — dipakai tombol "Lanjutkan Pembayaran" di Tracking jika popup Snap saat checkout ditutup/gagal
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  user  User        @relation(fields: [userId], references: [id])
+  items OrderItem[]
+
+  @@index([userId])
+  @@index([status])
+}
+
+model OrderItem {
+  id          String @id @default(cuid())
+  orderId     String
+  productId   String
+  productName String // disalin saat order dibuat, agar histori tidak berubah jika produk diedit
+  price       Int
+  quantity    Int
+
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id])
+
+  @@index([orderId])
+}
+
+// =========================================================================
+// ULASAN PRODUK
+// Aturan aplikasi (ditegakkan di API, BUKAN di schema): ulasan hanya boleh
+// dibuat jika ada Order milik user tsb, berisi productId terkait, dengan
+// status = DITERIMA. Lihat TODO di app/api/reviews/route.ts (batch berikutnya).
+// =========================================================================
+
+model Review {
+  id        String   @id @default(cuid())
+  userId    String
+  productId String
+  orderId   String // dipakai untuk validasi kepemilikan & status order
+  rating    Int // 1-5, divalidasi di level aplikasi
+  comment   String?
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
+
+  @@unique([userId, orderId, productId]) // cegah user mengulas item yang sama 2x dari order yang sama
+  @@index([productId])
+}
