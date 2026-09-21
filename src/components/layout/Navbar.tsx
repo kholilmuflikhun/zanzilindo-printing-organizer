@@ -65,7 +65,7 @@ export default function Navbar() {
               </Link>
               {session.user?.role === "ADMIN" && (
                 <Link
-                  href="/admin/produk"
+                  href="/admin"
                   className="text-sm font-medium text-gray-700 hover:text-brand dark:text-gray-200"
                 >
                   Admin
@@ -138,7 +138,7 @@ export default function Navbar() {
               {status === "authenticated" ? (
                 <div className="flex items-center gap-3">
                   {session.user?.role === "ADMIN" && (
-                    <Link href="/admin/produk" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-brand">
+                    <Link href="/admin" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-brand">
                       Admin
                     </Link>
                   )}
