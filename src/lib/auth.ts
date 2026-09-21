@@ -43,12 +43,25 @@ export const authOptions: NextAuthOptions = {
     signIn: "/login",
   },
   callbacks: {
+    async jwt({ token, user }) {
+      if (user?.id || (token.sub && !token.role)) {
+        const databaseUser = await prisma.user.findUnique({
+          where: { id: user?.id ?? token.sub },
+          select: { role: true },
+        });
+        token.role = databaseUser?.role;
+      }
+      return token;
+    },
     async session({ session, token }) {
       // `session.user.id` sekarang benar-benar bertipe `string` berkat
       // augmentation di `src/types/next-auth.d.ts` — tidak perlu cast manual
       // lagi seperti sebelumnya. `token.sub` = user id (standar JWT NextAuth).
       if (session.user && token.sub) {
         session.user.id = token.sub;
+      }
+      if (session.user && token.role) {
+        session.user.role = token.role;
       }
       return session;
     },

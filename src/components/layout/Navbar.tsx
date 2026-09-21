@@ -63,6 +63,14 @@ export default function Navbar() {
               >
                 {session.user?.name ?? "Member"}
               </Link>
+              {session.user?.role === "ADMIN" && (
+                <Link
+                  href="/admin/produk"
+                  className="text-sm font-medium text-gray-700 hover:text-brand dark:text-gray-200"
+                >
+                  Admin
+                </Link>
+              )}
               <button
                 onClick={() => signOut()}
                 className="rounded-full border border-brand px-4 py-1.5 text-sm font-medium text-brand transition hover:bg-brand hover:text-white"
@@ -128,12 +136,19 @@ export default function Navbar() {
                 </Link>
               </div>
               {status === "authenticated" ? (
-                <button
-                  onClick={() => signOut()}
-                  className="rounded-full border border-brand px-4 py-1.5 text-sm font-medium text-brand"
-                >
-                  Logout
-                </button>
+                <div className="flex items-center gap-3">
+                  {session.user?.role === "ADMIN" && (
+                    <Link href="/admin/produk" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-brand">
+                      Admin
+                    </Link>
+                  )}
+                  <button
+                    onClick={() => signOut()}
+                    className="rounded-full border border-brand px-4 py-1.5 text-sm font-medium text-brand"
+                  >
+                    Logout
+                  </button>
+                </div>
               ) : (
                 <div className="flex gap-2">
                   <Link href="/login" className="text-sm font-medium">
