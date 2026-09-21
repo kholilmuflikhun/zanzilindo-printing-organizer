@@ -5,6 +5,8 @@ import ProductCarousel from "@/components/home/ProductCarousel";
 import { getAllProducts, CATEGORY_OPTIONS } from "@/lib/products";
 import { CATEGORY_ICON, DEFAULT_CATEGORY_ICON } from "@/lib/categoryIcons";
 
+export const dynamic = "force-dynamic";
+
 export default async function HomePage() {
   const latestProducts = await getAllProducts(12);
 

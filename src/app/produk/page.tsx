@@ -5,6 +5,8 @@ import { getProducts, CATEGORY_OPTIONS, ProductFilter, PriceSort } from "@/lib/p
 import ProductFilterSort from "@/components/product/ProductFilterSort";
 import ProductGridList from "@/components/product/ProductGridList";
 
+export const dynamic = "force-dynamic";
+
 interface ProdukPageProps {
   searchParams: {
     kategori?: string;

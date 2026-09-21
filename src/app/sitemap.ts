@@ -2,6 +2,8 @@
 import type { MetadataRoute } from "next";
 import { getAllProductSlugs } from "@/lib/products";
 
+export const dynamic = "force-dynamic";
+
 const SITE_URL = "https://zanzilindo.com"; // TODO: GANTI_DENGAN_DOMAIN_ASLI_ANDA
 
 // Daftar kategori produk statis — dipakai untuk halaman listing per kategori.

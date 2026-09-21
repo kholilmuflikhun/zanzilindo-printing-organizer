@@ -6,6 +6,8 @@ import AddToCartPanel from "@/components/product/AddToCartPanel";
 import ReviewList from "@/components/review/ReviewList";
 import { formatRupiah } from "@/lib/utils/format";
 
+export const dynamic = "force-dynamic";
+
 interface ProductPageProps {
   params: { slug: string };
 }
