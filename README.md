@@ -282,7 +282,7 @@ git push -u origin main
 7. Daftarkan URL webhook Midtrans di Dashboard Midtrans (Settings →
    Configuration → Payment Notification URL):
    `https://domainkamu.vercel.app/api/midtrans/notification`
-8. Cron pembatalan order (`vercel.json`, jadwal tiap 15 menit) aktif otomatis
+8. Cron pembatalan order (`vercel.json`, jadwal sekali sehari pada 00:00 UTC) aktif otomatis
    begitu deploy — Vercel akan mengirim header `Authorization: Bearer
    <CRON_SECRET>` ke `/api/midtrans/cancel-expired`. Pastikan `CRON_SECRET`
    di poin 4 sudah diisi. (Vercel Cron tersedia di plan Hobby dengan batas
@@ -400,8 +400,8 @@ git push -u origin main
     tercentang ke `POST /api/checkout`, load Midtrans **Snap.js** via
     `next/script`, buka popup pembayaran (`window.snap.pay`), redirect ke
     halaman Tracking pesanan setelah sukses/pending/popup ditutup.
-  - `app/api/midtrans/cancel-expired/route.ts` + `vercel.json`: cron tiap 15
-    menit, membatalkan otomatis order `MENUNGGU_PEMBAYARAN` yang melewati
+  - `app/api/midtrans/cancel-expired/route.ts` + `vercel.json`: cron sekali
+    sehari pada 00:00 UTC, membatalkan otomatis order `MENUNGGU_PEMBAYARAN` yang melewati
     `expiredAt` (implementasi nyata dari "Countdown 1x24 jam" + auto-cancel
     yang sebelumnya cuma placeholder path kosong di struktur direktori).
     Dilindungi header `Authorization: Bearer <CRON_SECRET>`.
