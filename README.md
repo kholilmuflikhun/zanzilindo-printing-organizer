@@ -18,7 +18,7 @@ Auth Google. Dibangun dengan Next.js App Router agar SEO & performa maksimal.
 | UI / React     | React 18.3.1                                                    |
 | Bahasa         | TypeScript 5.5.4                                                |
 | Styling        | Tailwind CSS 3.4.7 (+ dark mode `class` strategy)               |
-| Auth           | NextAuth.js 4.24.7 (Credentials + Google OAuth) + Prisma Adapter |
+| Auth           | NextAuth.js 4.24.7 (Credentials + Google OAuth) + Prisma Adapter|
 | Payment        | Midtrans Snap (Sandbox → Production)                            |
 | Notifikasi     | WhatsApp Business API / Fonnte (HTTP webhook)                   |
 | Database       | Prisma ORM 5.17.0 + PostgreSQL                                  |
@@ -30,7 +30,7 @@ Auth Google. Dibangun dengan Next.js App Router agar SEO & performa maksimal.
 
 ## 2. Struktur Direktori (Directory Structure)
 
-```
+```text
 zanzilindo/
 ├── README.md
 ├── package.json
@@ -203,6 +203,7 @@ zanzilindo/
 ```
 
 **Kenapa struktur ini?**
+
 - `app/api/midtrans/notification` terpisah dari `app/api/checkout` supaya webhook
   (dipanggil server Midtrans) dan endpoint checkout (dipanggil dari browser)
   punya siklus hidup dan validasi keamanan yang berbeda (signature key vs session user).
@@ -241,8 +242,9 @@ npm run prisma:seed                  # isi 10 produk contoh (1 per kategori)
 npm run dev
 ```
 
-Buka **http://localhost:3000** — Home, Produk, Simulator, FAQ, Privacy Policy
+Buka **<http://localhost:3000>** — Home, Produk, Simulator, FAQ, Privacy Policy
 sudah bisa langsung dipakai tanpa API key apa pun. Yang butuh env var:
+
 - **Login Google** → butuh `GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET` (Google Cloud Console → OAuth Consent Screen + Credentials, redirect URI: `http://localhost:3000/api/auth/callback/google`)
 - **Checkout/Bayar Sekarang** → butuh `MIDTRANS_SERVER_KEY` + `NEXT_PUBLIC_MIDTRANS_CLIENT_KEY` (daftar [Midtrans Sandbox](https://dashboard.sandbox.midtrans.com), gratis)
 - **Notifikasi WA** → butuh `WHATSAPP_API_URL`/`WHATSAPP_API_TOKEN` (mis. akun [Fonnte](https://fonnte.com))
@@ -291,10 +293,12 @@ git push -u origin main
 6. Setelah live, jalankan migrasi database ke Postgres production (dari
    komputer lokal, dengan `DATABASE_URL` di `.env.local` diarahkan sementara
    ke database production):
+
    ```bash
    npx prisma migrate deploy
    npm run prisma:seed   # opsional, kalau ingin data awal yang sama
    ```
+
 7. Daftarkan URL webhook Midtrans di Dashboard Midtrans (Settings →
    Configuration → Payment Notification URL):
    `https://domainkamu.vercel.app/api/midtrans/notification`
@@ -312,10 +316,7 @@ git push -u origin main
 > Aturan: setiap ada perubahan/penambahan fitur, tambahkan entri BARU di
 > **paling atas** daftar di bawah. **Jangan pernah menghapus log lama.**
 
-```
-## [Unreleased]
-- (kosongkan, isi saat ada perubahan berikutnya)
-
+```text
 ## [0.10.0] - 2026-09-22
 ### Added
 - **Admin Panel** — UI pengelolaan produk & pesanan tanpa Prisma Studio:
@@ -734,6 +735,7 @@ git push -u origin main
 ## 7. Status Audit Batch Ini
 
 Kode yang diberikan pada batch 1 (lihat pesan berikutnya) sudah dicek untuk:
+
 - ✅ Tidak ada circular import (pricing logic terpisah dari komponen UI).
 - ✅ Semua komponen client diberi `"use client"` di baris pertama.
 - ✅ Tidak ada penggunaan variabel/komponen yang belum didefinisikan.
@@ -771,6 +773,7 @@ oleh pemilik pesanan).
 **Update batch 9 (Cart, Checkout, Tracking — PENUTUP alur pemesanan):**
 bagian terbesar & terakhir selesai. Saat audit, ditemukan 2 bug nyata dan
 langsung diperbaiki (bukan ditunda ke batch berikutnya):
+
 1. `session.user.id` dipakai di banyak file tapi belum ada NextAuth type
    augmentation → akan gagal build. Diperbaiki via `types/next-auth.d.ts`.
 2. Non-null assertion berantai (`session!.user!.id!`) di 2 halaman member,
