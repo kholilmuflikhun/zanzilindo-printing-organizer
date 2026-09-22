@@ -4,26 +4,26 @@ Website e-commerce percetakan (digital printing, offset, merchandise) dengan
 kalkulator harga real-time, pembayaran Midtrans, notifikasi WhatsApp, dan
 Auth Google. Dibangun dengan Next.js App Router agar SEO & performa maksimal.
 
-> Dokumen ini adalah bagian 1 dari paket deliverable. Source code krusial
-> (Navbar, Kalkulator Harga, Integrasi Midtrans, Integrasi WhatsApp, Auth
-> Google) ada di pesan-pesan berikutnya dalam percakapan ini — salin setiap
-> file ke path yang tertulis di judul code block-nya.
+> README ini diperbarui agar sesuai dengan proyek yang ada di repositori saat ini.
+> Fokusnya adalah dokumentasi untuk setup lokal, deploy Vercel, dan arsitektur
+> aplikasi yang benar-benar dipakai di kode.
 
 ---
 
 ## 1. Tech Stack
 
-| Layer          | Pilihan                                             |
-|----------------|------------------------------------------------------|
-| Framework      | Next.js 14 (App Router, Server Components)           |
-| Bahasa         | TypeScript                                            |
-| Styling        | Tailwind CSS (+ dark mode `class` strategy)          |
-| Auth           | NextAuth.js (Credentials + Google OAuth) + @auth/prisma-adapter |
-| Payment        | Midtrans Snap (Sandbox → Production)                  |
-| Notifikasi     | WhatsApp Business API / Fonnte (HTTP webhook)         |
-| Database       | Prisma ORM + PostgreSQL (rekomendasi: Supabase/Neon)  |
-| Deployment     | Vercel                                                |
-| Animasi        | Framer Motion                                          |
+| Layer          | Pilihan                                                         |
+|----------------|-----------------------------------------------------------------|
+| Framework      | Next.js 16.3.5 (App Router, Server Components)                  |
+| UI / React     | React 18.3.1                                                    |
+| Bahasa         | TypeScript 5.5.4                                                |
+| Styling        | Tailwind CSS 3.4.7 (+ dark mode `class` strategy)               |
+| Auth           | NextAuth.js 4.24.7 (Credentials + Google OAuth) + Prisma Adapter |
+| Payment        | Midtrans Snap (Sandbox → Production)                            |
+| Notifikasi     | WhatsApp Business API / Fonnte (HTTP webhook)                   |
+| Database       | Prisma ORM 5.17.0 + PostgreSQL                                  |
+| Deployment     | Vercel                                                          |
+| Animasi        | Framer Motion 11.3.19                                           |
 
 ---
 
@@ -36,8 +36,9 @@ zanzilindo/
 ├── next.config.mjs
 ├── tailwind.config.ts
 ├── tsconfig.json
-├── vercel.json                       # selesai (batch 9) — jadwal Vercel Cron untuk cancel-expired
-├── .env.example                      # TODO: isi semua API key di sini
+├── vercel.json                       # jadwal Vercel Cron untuk cancel-expired
+├── .env                              # (opsional, untuk environment lokal aktif)
+├── .env.example                      # template variabel lingkungan
 ├── .env.local                        # (gitignored) salinan .env.example berisi key asli
 │
 ├── prisma/
