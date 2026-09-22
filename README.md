@@ -24,6 +24,7 @@ Auth Google. Dibangun dengan Next.js App Router agar SEO & performa maksimal.
 | Database       | Prisma ORM 5.17.0 + PostgreSQL                                  |
 | Deployment     | Vercel                                                          |
 | Animasi        | Framer Motion 11.3.19                                           |
+| Ikon           | Lucide React 0.454.0 (SVG outline icons)                        |
 
 ---
 
@@ -99,6 +100,14 @@ zanzilindo/
 │   │   │           ├── page.tsx              # tracking pesanan (server) + form ulasan (jika status diterima)
 │   │   │           └── CountdownSection.tsx  # client — Countdown + tombol "Lanjutkan Pembayaran"
 │   │   │
+│   │   ├── admin/                            # halaman admin (role ADMIN)
+│   │   │   ├── layout.tsx                    # guard SERVER-SIDE: hanya role ADMIN yang diizinkan
+│   │   │   ├── page.tsx                      # server component, render AdminDashboard
+│   │   │   ├── AdminDashboard.tsx            # client — ringkasan statistik + shortcut menu
+│   │   │   └── produk/
+│   │   │       ├── page.tsx                  # server component, render AdminProductManager
+│   │   │       └── AdminProductManager.tsx   # client — tabel produk + tambah/ubah/hapus via API
+│   │   │
 │   │   └── api/
 │   │       ├── auth/[...nextauth]/route.ts
 │   │       ├── register/route.ts             # buat user baru, hash password bcrypt
@@ -108,7 +117,11 @@ zanzilindo/
 │   │       ├── midtrans/
 │   │       │   ├── notification/route.ts     # webhook Midtrans (server-to-server)
 │   │       │   └── cancel-expired/route.ts   # selesai (batch 9) — cron: batalkan order lewat 1x24 jam
-│   │       └── whatsapp/notify/route.ts      # kirim notifikasi WA ke admin
+│   │       └── admin/
+│   │           ├── dashboard/route.ts        # GET statistik ringkas (order, produk, revenue)
+│   │           └── products/
+│   │               ├── route.ts              # GET list + POST produk baru
+│   │               └── [id]/route.ts         # PUT (update) + DELETE produk
 │   │
 │   ├── components/
 │   │   ├── layout/
@@ -143,16 +156,18 @@ zanzilindo/
 │   │   │   ├── ReviewList.tsx                 # selesai (batch 7) — server component, tampilkan ulasan di halaman produk
 │   │   │   └── ReviewForm.tsx                 # selesai (batch 9) — bintang + komentar, POST /api/reviews
 │   │   └── ui/
-│   │       └── Countdown.tsx                  # selesai (batch 9) — dipakai Checkout & Tracking
+│   │       ├── Countdown.tsx                  # dipakai Checkout & Tracking
+│   │       └── GoogleIcon.tsx                 # logo Google SVG resmi (dipakai Login & Register)
 │   │                                          # (Button, Card, Tabs, Modal, dll — primitives lain menyusul sesuai kebutuhan)
 │   │
 │   ├── lib/
 │   │   ├── auth.ts                            # konfigurasi NextAuth (Google + Credentials + PrismaAdapter)
 │   │   ├── prisma.ts                          # instance PrismaClient singleton
 │   │   ├── products.ts                        # query Prisma katalog produk + CATEGORY_OPTIONS (satu sumber) + getProducts (filter/sort)
-│   │   ├── orders.ts                          # selesai (batch 9) — query pesanan dengan cek kepemilikan, label & urutan status
+│   │   ├── orders.ts                          # query pesanan dengan cek kepemilikan, label & urutan status
 │   │   ├── midtrans.ts                        # helper Snap API (createTransaction, verifySignature)
 │   │   ├── whatsapp.ts                        # helper kirim pesan WA
+│   │   ├── categoryIcons.tsx                  # pemetaan slug kategori → komponen ikon Lucide (CATEGORY_ICON)
 │   │   ├── pricing/
 │   │   │   ├── types.ts                       # tipe & interface variabel harga tiap kategori
 │   │   │   ├── bannerPricing.ts               # rumus hitung Banner (Panjang x Lebar x Harga Pokok/meter)
@@ -300,6 +315,22 @@ git push -u origin main
 ```
 ## [Unreleased]
 - (kosongkan, isi saat ada perubahan berikutnya)
+
+## [0.10.0] - 2026-09-22
+### Added
+- **Admin Panel** — UI pengelolaan produk & pesanan tanpa Prisma Studio:
+  - `app/admin/layout.tsx`: guard SERVER-SIDE role `ADMIN` — pengunjung
+    non-admin di-redirect otomatis, tanpa rendering halaman sama sekali.
+  - `app/admin/page.tsx` + `AdminDashboard.tsx`: dashboard ringkasan statistik
+    (total order, produk aktif, estimasi revenue) dengan shortcut menu ke
+    halaman manajemen lanjutan.
+  - `app/admin/produk/page.tsx` + `AdminProductManager.tsx`: tabel produk
+    dengan fungsi tambah, ubah, dan hapus produk secara langsung dari UI —
+    menutup kebutuhan Prisma Studio untuk operasi CRUD produk sehari-hari.
+  - `app/api/admin/dashboard/route.ts`: endpoint GET statistik dashboard
+    (dilindungi cek session role `ADMIN` di server).
+  - `app/api/admin/products/route.ts`: GET list + POST produk baru.
+  - `app/api/admin/products/[id]/route.ts`: PUT (update) + DELETE produk.
 
 ## [0.9.2] - 2026-09-19
 ### Changed
@@ -749,11 +780,15 @@ Audit final dijalankan ulang mencakup: import resolve, named-export exists,
 DAN pengecekan tambahan "tidak ada `session!.user!` tersisa di codebase" —
 semua lolos bersih di 84 file.
 
+**Update Admin Panel:** halaman admin (`app/admin/`) sudah diimplementasikan,
+mencakup dashboard statistik (`AdminDashboard.tsx`) dan manajemen produk
+(`app/admin/produk/AdminProductManager.tsx`) dengan CRUD lengkap via
+`api/admin/products/` dan `api/admin/dashboard/`. Guard role `ADMIN`
+diterapkan di `app/admin/layout.tsx` (server-side, bukan client-side).
+
 **Seluruh spesifikasi awal sudah diimplementasikan.** Yang masih berupa data
 dummy/placeholder & perlu disesuaikan sebelum production (semua sudah
 ditandai `TODO:` di kodenya masing-masing): harga pokok di 10 file
 `lib/pricing/*.ts`, domain asli di file-file SEO, API key Midtrans/Google/
-WhatsApp di `.env.local`, gambar produk asli (masih placeholder teks/gradient
-karena `next/image` + domain CDN belum dikonfigurasi), dan halaman admin
-untuk kelola produk/pesanan (saat ini lewat Prisma Studio atau query manual —
-belum ada UI admin, di luar cakupan spesifikasi awal).
+WhatsApp di `.env.local`, dan gambar produk asli (masih placeholder teks/gradient
+karena `next/image` + domain CDN belum dikonfigurasi).
